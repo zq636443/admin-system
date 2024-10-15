@@ -1,18 +1,18 @@
-import { PlusOutlined } from '@ant-design/icons';
-import { PageContainer } from '@ant-design/pro-components';
-import { useRequest } from '@umijs/max';
-import { Button, Card, List, Typography } from 'antd';
-import type { CardListItemDataType } from './data.d';
-import { queryFakeList } from './service';
+import {PlusOutlined} from '@ant-design/icons';
+import {PageContainer} from '@ant-design/pro-components';
+import {useRequest} from '@umijs/max';
+import {Button, Card, List, Typography} from 'antd';
+import type {CardListItemDataType} from './data.d';
+import {queryFakeList} from './service';
 import useStyles from './style.style';
-const { Paragraph } = Typography;
+const {Paragraph} = Typography;
 const CardList = () => {
-  const { styles } = useStyles();
-  const { data, loading } = useRequest(() => {
-    return queryFakeList({
+  const {styles} = useStyles();
+  const {data, loading} = useRequest( () => {
+    return queryFakeList( {
       count: 8,
-    });
-  });
+    } );
+  } );
   const list = data?.list || [];
   const content = (
     <div className={styles.pageHeaderContent}>
@@ -61,8 +61,8 @@ const CardList = () => {
             xxl: 4,
           }}
           dataSource={[nullData, ...list]}
-          renderItem={(item) => {
-            if (item && item.id) {
+          renderItem={( item ) => {
+            if ( item && item.id ) {
               return (
                 <List.Item key={item.id}>
                   <Card

@@ -2,7 +2,7 @@
  * @Author: zq636443 zq636443@163.com
  * @Date: 2024-10-10 21:48:26
  * @LastEditors: zq636443 zq636443@163.com
- * @LastEditTime: 2024-10-11 09:36:25
+ * @LastEditTime: 2024-10-15 15:06:34
  * @FilePath: /admin-system/config/defaultSettings.ts
  */
 import { ProLayoutProps } from '@ant-design/pro-components';
@@ -24,7 +24,7 @@ const Settings: ProLayoutProps & {
   colorWeak: false,
   title: '绩牛数智营销',
   pwa: true,
-  logo: 'https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg',
+  logo: 'https://media-test.jiniutech.com/dev/image/78817af7-7158-4b0d-ba9f-23fa02c99ccf.png',
   iconfontUrl: '',
   token: {
     // 参见ts声明，demo 见文档，通过token 修改样式

@@ -1,5 +1,5 @@
-import { PlusOutlined } from '@ant-design/icons';
-import type { ActionType, ProColumns, ProDescriptionsItemProps } from '@ant-design/pro-components';
+import {PlusOutlined} from '@ant-design/icons';
+import type {ActionType, ProColumns, ProDescriptionsItemProps} from '@ant-design/pro-components';
 import {
   FooterToolbar,
   ModalForm,
@@ -9,29 +9,29 @@ import {
   ProFormTextArea,
   ProTable,
 } from '@ant-design/pro-components';
-import { Button, Drawer, Input, message } from 'antd';
-import React, { useRef, useState } from 'react';
-import type { FormValueType } from './components/UpdateForm';
+import {Button, Drawer, Input, message} from 'antd';
+import React, {useRef, useState} from 'react';
+import type {FormValueType} from './components/UpdateForm';
 import UpdateForm from './components/UpdateForm';
-import type { TableListItem, TableListPagination } from './data';
-import { addRule, removeRule, rule, updateRule } from './service';
+import type {TableListItem, TableListPagination} from './data';
+import {addRule, removeRule, rule, updateRule} from './service';
 /**
  * 添加节点
  *
  * @param fields
  */
 
-const handleAdd = async (fields: TableListItem) => {
-  const hide = message.loading('正在添加');
+const handleAdd = async ( fields: TableListItem ) => {
+  const hide = message.loading( '正在添加' );
 
   try {
-    await addRule({ ...fields });
+    await addRule( {...fields} );
     hide();
-    message.success('添加成功');
+    message.success( '添加成功' );
     return true;
-  } catch (error) {
+  } catch ( error ) {
     hide();
-    message.error('添加失败请重试！');
+    message.error( '添加失败请重试！' );
     return false;
   }
 };
@@ -41,20 +41,20 @@ const handleAdd = async (fields: TableListItem) => {
  * @param fields
  */
 
-const handleUpdate = async (fields: FormValueType, currentRow?: TableListItem) => {
-  const hide = message.loading('正在配置');
+const handleUpdate = async ( fields: FormValueType, currentRow?: TableListItem ) => {
+  const hide = message.loading( '正在配置' );
 
   try {
-    await updateRule({
+    await updateRule( {
       ...currentRow,
       ...fields,
-    });
+    } );
     hide();
-    message.success('配置成功');
+    message.success( '配置成功' );
     return true;
-  } catch (error) {
+  } catch ( error ) {
     hide();
-    message.error('配置失败请重试！');
+    message.error( '配置失败请重试！' );
     return false;
   }
 };
@@ -64,34 +64,34 @@ const handleUpdate = async (fields: FormValueType, currentRow?: TableListItem) =
  * @param selectedRows
  */
 
-const handleRemove = async (selectedRows: TableListItem[]) => {
-  const hide = message.loading('正在删除');
-  if (!selectedRows) return true;
+const handleRemove = async ( selectedRows: TableListItem[] ) => {
+  const hide = message.loading( '正在删除' );
+  if ( !selectedRows ) return true;
 
   try {
-    await removeRule({
-      key: selectedRows.map((row) => row.key),
-    });
+    await removeRule( {
+      key: selectedRows.map( ( row ) => row.key ),
+    } );
     hide();
-    message.success('删除成功，即将刷新');
+    message.success( '删除成功，即将刷新' );
     return true;
-  } catch (error) {
+  } catch ( error ) {
     hide();
-    message.error('删除失败，请重试');
+    message.error( '删除失败，请重试' );
     return false;
   }
 };
 
 const TableList: React.FC = () => {
   /** 新建窗口的弹窗 */
-  const [createModalVisible, handleModalVisible] = useState<boolean>(false);
+  const [createModalVisible, handleModalVisible] = useState<boolean>( false );
   /** 分布更新窗口的弹窗 */
 
-  const [updateModalVisible, handleUpdateModalVisible] = useState<boolean>(false);
-  const [showDetail, setShowDetail] = useState<boolean>(false);
+  const [updateModalVisible, handleUpdateModalVisible] = useState<boolean>( false );
+  const [showDetail, setShowDetail] = useState<boolean>( false );
   const actionRef = useRef<ActionType>();
   const [currentRow, setCurrentRow] = useState<TableListItem>();
-  const [selectedRowsState, setSelectedRows] = useState<TableListItem[]>([]);
+  const [selectedRowsState, setSelectedRows] = useState<TableListItem[]>( [] );
   /** 国际化配置 */
 
   const columns: ProColumns<TableListItem>[] = [
@@ -99,12 +99,12 @@ const TableList: React.FC = () => {
       title: '规则名称',
       dataIndex: 'name',
       tip: '规则名称是唯一的 key',
-      render: (dom, entity) => {
+      render: ( dom, entity ) => {
         return (
           <a
             onClick={() => {
-              setCurrentRow(entity);
-              setShowDetail(true);
+              setCurrentRow( entity );
+              setShowDetail( true );
             }}
           >
             {dom}
@@ -122,7 +122,7 @@ const TableList: React.FC = () => {
       dataIndex: 'callNo',
       sorter: true,
       hideInForm: true,
-      renderText: (val: string) => `${val}万`,
+      renderText: ( val: string ) => `${val}万`,
     },
     {
       title: '状态',
@@ -152,30 +152,30 @@ const TableList: React.FC = () => {
       sorter: true,
       dataIndex: 'updatedAt',
       valueType: 'dateTime',
-      renderFormItem: (item, { defaultRender, ...rest }, form) => {
-        const status = form.getFieldValue('status');
+      renderFormItem: ( item, {defaultRender, ...rest}, form ) => {
+        const status = form.getFieldValue( 'status' );
 
-        if (`${status}` === '0') {
+        if ( `${status}` === '0' ) {
           return false;
         }
 
-        if (`${status}` === '3') {
+        if ( `${status}` === '3' ) {
           return <Input {...rest} placeholder="请输入异常原因！" />;
         }
 
-        return defaultRender(item);
+        return defaultRender( item );
       },
     },
     {
       title: '操作',
       dataIndex: 'option',
       valueType: 'option',
-      render: (_, record) => [
+      render: ( _, record ) => [
         <a
           key="config"
           onClick={() => {
-            handleUpdateModalVisible(true);
-            setCurrentRow(record);
+            handleUpdateModalVisible( true );
+            setCurrentRow( record );
           }}
         >
           配置
@@ -201,7 +201,7 @@ const TableList: React.FC = () => {
             type="primary"
             key="primary"
             onClick={() => {
-              handleModalVisible(true);
+              handleModalVisible( true );
             }}
           >
             <PlusOutlined /> 新建
@@ -210,8 +210,8 @@ const TableList: React.FC = () => {
         request={rule}
         columns={columns}
         rowSelection={{
-          onChange: (_, selectedRows) => {
-            setSelectedRows(selectedRows);
+          onChange: ( _, selectedRows ) => {
+            setSelectedRows( selectedRows );
           },
         }}
       />
@@ -229,15 +229,15 @@ const TableList: React.FC = () => {
               </a>{' '}
               项 &nbsp;&nbsp;
               <span>
-                服务调用次数总计 {selectedRowsState.reduce((pre, item) => pre + item.callNo!, 0)} 万
+                服务调用次数总计 {selectedRowsState.reduce( ( pre, item ) => pre + item.callNo!, 0 )} 万
               </span>
             </div>
           }
         >
           <Button
             onClick={async () => {
-              await handleRemove(selectedRowsState);
-              setSelectedRows([]);
+              await handleRemove( selectedRowsState );
+              setSelectedRows( [] );
               actionRef.current?.reloadAndRest?.();
             }}
           >
@@ -251,11 +251,11 @@ const TableList: React.FC = () => {
         width="400px"
         open={createModalVisible}
         onVisibleChange={handleModalVisible}
-        onFinish={async (value) => {
-          const success = await handleAdd(value as TableListItem);
-          if (success) {
-            handleModalVisible(false);
-            if (actionRef.current) {
+        onFinish={async ( value ) => {
+          const success = await handleAdd( value as TableListItem );
+          if ( success ) {
+            handleModalVisible( false );
+            if ( actionRef.current ) {
               actionRef.current.reload();
             }
           }
@@ -274,21 +274,21 @@ const TableList: React.FC = () => {
         <ProFormTextArea width="md" name="desc" />
       </ModalForm>
       <UpdateForm
-        onSubmit={async (value) => {
-          const success = await handleUpdate(value, currentRow);
+        onSubmit={async ( value ) => {
+          const success = await handleUpdate( value, currentRow );
 
-          if (success) {
-            handleUpdateModalVisible(false);
-            setCurrentRow(undefined);
+          if ( success ) {
+            handleUpdateModalVisible( false );
+            setCurrentRow( undefined );
 
-            if (actionRef.current) {
+            if ( actionRef.current ) {
               actionRef.current.reload();
             }
           }
         }}
         onCancel={() => {
-          handleUpdateModalVisible(false);
-          setCurrentRow(undefined);
+          handleUpdateModalVisible( false );
+          setCurrentRow( undefined );
         }}
         updateModalVisible={updateModalVisible}
         values={currentRow || {}}
@@ -298,8 +298,8 @@ const TableList: React.FC = () => {
         width={600}
         open={showDetail}
         onClose={() => {
-          setCurrentRow(undefined);
-          setShowDetail(false);
+          setCurrentRow( undefined );
+          setShowDetail( false );
         }}
         closable={false}
       >
@@ -307,9 +307,9 @@ const TableList: React.FC = () => {
           <ProDescriptions<TableListItem>
             column={2}
             title={currentRow?.name}
-            request={async () => ({
+            request={async () => ( {
               data: currentRow || {},
-            })}
+            } )}
             params={{
               id: currentRow?.name,
             }}

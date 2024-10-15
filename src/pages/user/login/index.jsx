@@ -1,6 +1,8 @@
 import { Footer } from '@/components';
-import { login } from '@/services/ant-design-pro/api';
+// import { login } from '@/services/ant-design-pro/api';
+import logo from '@/assets/images/logo.svg';
 import { getFakeCaptcha } from '@/services/ant-design-pro/login';
+import { login } from '@/services/users/index';
 import {
   AlipayCircleOutlined,
   LockOutlined,
@@ -18,7 +20,7 @@ import {
 import { FormattedMessage, Helmet, SelectLang, useIntl, useModel } from '@umijs/max';
 import { Alert, message, Tabs } from 'antd';
 import { createStyles } from 'antd-style';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { flushSync } from 'react-dom';
 import Settings from '../../../../config/defaultSettings';
 
@@ -51,8 +53,7 @@ const useStyles = createStyles(({ token }) => {
       flexDirection: 'column',
       height: '100vh',
       overflow: 'auto',
-      backgroundImage:
-        "url('https://mdn.alipayobjects.com/yuyan_qk0oxh/afts/img/V-_oS6r-i7wAAAAAAAAAAAAAFl94AQBr')",
+      backgroundImage: 'url(https://gw.alipayobjects.com/zos/rmsportal/TVYTbAXWheQpRcWDaDMu.svg)',
       backgroundSize: '100% 100%',
     },
   };
@@ -80,9 +81,7 @@ const Lang = () => {
   );
 };
 
-const LoginMessage: React.FC<{
-  content: string;
-}> = ({ content }) => {
+const LoginMessage = ({ content }) => {
   return (
     <Alert
       style={{
@@ -95,9 +94,9 @@ const LoginMessage: React.FC<{
   );
 };
 
-const Login: React.FC = () => {
-  const [userLoginState, setUserLoginState] = useState<API.LoginResult>({});
-  const [type, setType] = useState<string>('account');
+const Login = () => {
+  const [userLoginState, setUserLoginState] = useState({});
+  const [type, setType] = useState('account');
   const { initialState, setInitialState } = useModel('@@initialState');
   const { styles } = useStyles();
   const intl = useIntl();
@@ -114,11 +113,12 @@ const Login: React.FC = () => {
     }
   };
 
-  const handleSubmit = async (values: API.LoginParams) => {
+  const handleSubmit = async (values) => {
     try {
       // 登录
-      const msg = await login({ ...values, type });
-      if (msg.status === 'ok') {
+      const { username, password } = values;
+      const { code, success, result } = await login({ username, password });
+      if (success && code === 200 && result) {
         const defaultLoginSuccessMessage = intl.formatMessage({
           id: 'pages.login.success',
           defaultMessage: '登录成功！',
@@ -166,9 +166,9 @@ const Login: React.FC = () => {
             minWidth: 280,
             maxWidth: '75vw',
           }}
-          logo={<img alt="logo" src="/logo.svg" />}
-          title="Ant Design"
-          subTitle={intl.formatMessage({ id: 'pages.layouts.userLayout.title' })}
+          logo={<img alt="logo" src={logo} />}
+          title={Settings.title}
+          subTitle="绩牛数智营销平台，为您打造专属活动营销方案"
           initialValues={{
             autoLogin: true,
           }}
@@ -181,7 +181,7 @@ const Login: React.FC = () => {
             <ActionIcons key="icons" />,
           ]}
           onFinish={async (values) => {
-            await handleSubmit(values as API.LoginParams);
+            await handleSubmit(values);
           }}
         >
           <Tabs
@@ -205,7 +205,6 @@ const Login: React.FC = () => {
               },
             ]}
           />
-
           {status === 'error' && loginType === 'account' && (
             <LoginMessage
               content={intl.formatMessage({

@@ -1,6 +1,6 @@
-import { DownOutlined, PlusOutlined } from '@ant-design/icons';
-import { PageContainer } from '@ant-design/pro-components';
-import { useRequest } from '@umijs/max';
+import {DownOutlined, PlusOutlined} from '@ant-design/icons';
+import {PageContainer} from '@ant-design/pro-components';
+import {useRequest} from '@umijs/max';
 import {
   Avatar,
   Button,
@@ -15,21 +15,21 @@ import {
   Row,
 } from 'antd';
 import dayjs from 'dayjs';
-import type { FC } from 'react';
-import React, { useState } from 'react';
+import type {FC} from 'react';
+import React, {useState} from 'react';
 import OperationModal from './components/OperationModal';
-import type { BasicListItemDataType } from './data.d';
-import { addFakeList, queryFakeList, removeFakeList, updateFakeList } from './service';
+import type {BasicListItemDataType} from './data.d';
+import {addFakeList, queryFakeList, removeFakeList, updateFakeList} from './service';
 import useStyles from './style.style';
 const RadioButton = Radio.Button;
 const RadioGroup = Radio.Group;
-const { Search } = Input;
+const {Search} = Input;
 const Info: FC<{
   title: React.ReactNode;
   value: React.ReactNode;
   bordered?: boolean;
-}> = ({ title, value, bordered }) => {
-  const { styles } = useStyles();
+}> = ( {title, value, bordered} ) => {
+  const {styles} = useStyles();
   return (
     <div className={styles.headerInfo}>
       <span>{title}</span>
@@ -38,12 +38,12 @@ const Info: FC<{
     </div>
   );
 };
-const ListContent = ({
-  data: { owner, createdAt, percent, status },
+const ListContent = ( {
+  data: {owner, createdAt, percent, status},
 }: {
   data: BasicListItemDataType;
-}) => {
-  const { styles } = useStyles();
+} ) => {
+  const {styles} = useStyles();
   return (
     <div>
       <div className={styles.listContentItem}>
@@ -52,7 +52,7 @@ const ListContent = ({
       </div>
       <div className={styles.listContentItem}>
         <span>开始时间</span>
-        <p>{dayjs(createdAt).format('YYYY-MM-DD HH:mm')}</p>
+        <p>{dayjs( createdAt ).format( 'YYYY-MM-DD HH:mm' )}</p>
       </div>
       <div className={styles.listContentItem}>
         <Progress
@@ -68,33 +68,33 @@ const ListContent = ({
   );
 };
 export const BasicList: FC = () => {
-  const { styles } = useStyles();
-  const [done, setDone] = useState<boolean>(false);
-  const [open, setVisible] = useState<boolean>(false);
-  const [current, setCurrent] = useState<Partial<BasicListItemDataType> | undefined>(undefined);
+  const {styles} = useStyles();
+  const [done, setDone] = useState<boolean>( false );
+  const [open, setVisible] = useState<boolean>( false );
+  const [current, setCurrent] = useState<Partial<BasicListItemDataType> | undefined>( undefined );
   const {
     data: listData,
     loading,
     mutate,
-  } = useRequest(() => {
-    return queryFakeList({
+  } = useRequest( () => {
+    return queryFakeList( {
       count: 50,
-    });
-  });
-  const { run: postRun } = useRequest(
-    (method, params) => {
-      if (method === 'remove') {
-        return removeFakeList(params);
+    } );
+  } );
+  const {run: postRun} = useRequest(
+    ( method, params ) => {
+      if ( method === 'remove' ) {
+        return removeFakeList( params );
       }
-      if (method === 'update') {
-        return updateFakeList(params);
+      if ( method === 'update' ) {
+        return updateFakeList( params );
       }
-      return addFakeList(params);
+      return addFakeList( params );
     },
     {
       manual: true,
-      onSuccess: (result) => {
-        mutate(result);
+      onSuccess: ( result ) => {
+        mutate( result );
       },
     },
   );
@@ -105,25 +105,25 @@ export const BasicList: FC = () => {
     pageSize: 5,
     total: list.length,
   };
-  const showEditModal = (item: BasicListItemDataType) => {
-    setVisible(true);
-    setCurrent(item);
+  const showEditModal = ( item: BasicListItemDataType ) => {
+    setVisible( true );
+    setCurrent( item );
   };
-  const deleteItem = (id: string) => {
-    postRun('remove', {
+  const deleteItem = ( id: string ) => {
+    postRun( 'remove', {
       id,
-    });
+    } );
   };
-  const editAndDelete = (key: string | number, currentItem: BasicListItemDataType) => {
-    if (key === 'edit') showEditModal(currentItem);
-    else if (key === 'delete') {
-      Modal.confirm({
+  const editAndDelete = ( key: string | number, currentItem: BasicListItemDataType ) => {
+    if ( key === 'edit' ) showEditModal( currentItem );
+    else if ( key === 'delete' ) {
+      Modal.confirm( {
         title: '删除任务',
         content: '确定删除该任务吗？',
         okText: '确认',
         cancelText: '取消',
-        onOk: () => deleteItem(currentItem.id),
-      });
+        onOk: () => deleteItem( currentItem.id ),
+      } );
     }
   };
   const extraContent = (
@@ -133,15 +133,15 @@ export const BasicList: FC = () => {
         <RadioButton value="progress">进行中</RadioButton>
         <RadioButton value="waiting">等待中</RadioButton>
       </RadioGroup>
-      <Search className={styles.extraContentSearch} placeholder="请输入" onSearch={() => ({})} />
+      <Search className={styles.extraContentSearch} placeholder="请输入" onSearch={() => ( {} )} />
     </div>
   );
   const MoreBtn: React.FC<{
     item: BasicListItemDataType;
-  }> = ({ item }) => (
+  }> = ( {item} ) => (
     <Dropdown
       menu={{
-        onClick: ({ key }) => editAndDelete(key, item),
+        onClick: ( {key} ) => editAndDelete( key, item ),
         items: [
           {
             key: 'edit',
@@ -160,14 +160,14 @@ export const BasicList: FC = () => {
     </Dropdown>
   );
   const handleDone = () => {
-    setDone(false);
-    setVisible(false);
-    setCurrent({});
+    setDone( false );
+    setVisible( false );
+    setCurrent( {} );
   };
-  const handleSubmit = (values: BasicListItemDataType) => {
-    setDone(true);
+  const handleSubmit = ( values: BasicListItemDataType ) => {
+    setDone( true );
     const method = values?.id ? 'update' : 'add';
-    postRun(method, values);
+    postRun( method, values );
   };
   return (
     <div>
@@ -205,14 +205,14 @@ export const BasicList: FC = () => {
               loading={loading}
               pagination={paginationProps}
               dataSource={list}
-              renderItem={(item) => (
+              renderItem={( item ) => (
                 <List.Item
                   actions={[
                     <a
                       key="edit"
-                      onClick={(e) => {
+                      onClick={( e ) => {
                         e.preventDefault();
-                        showEditModal(item);
+                        showEditModal( item );
                       }}
                     >
                       编辑
@@ -235,7 +235,7 @@ export const BasicList: FC = () => {
       <Button
         type="dashed"
         onClick={() => {
-          setVisible(true);
+          setVisible( true );
         }}
         style={{
           width: '100%',
