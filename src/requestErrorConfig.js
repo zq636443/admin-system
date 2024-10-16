@@ -129,7 +129,7 @@ const customRequestInterceptor = (config = {}) => {
       newOptions.headers['Accept'] = 'application/json';
       newOptions.data = newOptions.params;
     }
-  } else if (['get', 'patch'].includes(config.method)) {
+  } else if (['patch'].includes(config.method)) {
     const paramsArray = [];
     if (config.params) {
       Object.keys(config.params).forEach(key => {
