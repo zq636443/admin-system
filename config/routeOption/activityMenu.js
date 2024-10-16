@@ -2,9 +2,8 @@
  * @Author: zq636443 zq636443@163.com
  * @Date: 2024-10-14 13:51:22
  * @LastEditors: zq636443 zq636443@163.com
- * @LastEditTime: 2024-10-14 14:30:43
+ * @LastEditTime: 2024-10-16 10:31:08
  * @FilePath: /admin-system/config/routeOption/activityMenu.js
- * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
 const activityMenu = [
   {
@@ -29,7 +28,7 @@ const activityMenu = [
         component: './ActivityMarketing/ActivityList'
       },
     ]
-  } 
+  }
 ]
 
 export default activityMenu
