@@ -2,7 +2,7 @@
  * @Author: zq636443 zq636443@163.com
  * @Date: 2024-10-14 19:15:34
  * @LastEditors: zq636443 zq636443@163.com
- * @LastEditTime: 2024-10-15 14:49:35
+ * @LastEditTime: 2024-10-15 20:23:01
  * @FilePath: /admin-system/src/pages/ActivityMarketing/ActivityList/style.style.ts
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -35,6 +35,9 @@ const useStyles = createStyles(({ token }) => {
         display: 'none', // Chrome/Safari 隐藏滚动条
       },
       '.ant-list .ant-list-item-content-single': { maxWidth: '100%', overflowX: 'hidden' },
+      '.ant-card-body':{
+        padding: '10px'
+      }
     },
     extraImg: {
       width: '155px',
@@ -137,13 +140,95 @@ const useStyles = createStyles(({ token }) => {
       height: '274px',
       overflow: 'hidden',
       cursor: 'pointer',
-      img: {
+      'img:nth-child(1)': {
         transform: 'translateY(0)',
         width: '100%',
         overflow: 'hidden',
         transition: 'all 0.66s ease-in-out',
       },
     },
+    blockActivityCardStatus: {
+      position: 'absolute',
+      bottom: '7px',
+      left: '7px',
+      width: '60px',
+    },
+    blockActivityCardBottom:{
+      position:'relative',
+      cursor:'pointer',
+    },
+    blockActivityCardBottomName:{
+      margin:'5px 0',
+      overflow:'hidden',
+      textOverflow:'ellipsis',
+      whiteSpace:'nowrap',
+      fontSize:'14px',
+      fontWeight:500,
+      color:'#333',
+    },
+    blockActivityCardBottomTime:{
+      display:'flex',
+      alignItems:'center',
+      color:'#666',
+      fontWeight:400,
+      fontSize:'12px',
+      'img:nth-child(1)':{
+        width:'15px',
+        marginRight:'2px',
+      }
+    },
+    activityEdit: {
+      position: 'absolute',
+      bottom: 0,
+      left: 0,
+      width: '100%',
+      height: 0,
+      backgroundColor: '#fff',
+      opacity: 0,
+      transition: 'all 0.4s',
+    },
+  
+    activityEditbox: {
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      width: '100%',
+      height: '100%',
+    },
+  
+    activityEditboxItem: {
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'center',
+      alignItems: 'center',
+      cursor: 'pointer',
+      userSelect: 'none',
+      margin:'0 20px'
+    },
+  
+    editboxIcon: {
+      padding: '6px',
+      color: '#EDBB62',
+      fontSize: '20px',
+      backgroundImage: 'linear-gradient(162deg, #FDFDFD 0%, #F8FAFB 98%)',
+      border: '0.5px solid #E7E9EC',
+      borderRadius: '4px',
+    },
+  
+    activityEditboxText: {
+      marginTop: '5px',
+      color: '#17233D',
+      fontSize: '12px',
+    },
+  
+    activityEditboxItemSecond: {
+      margin: '0 20px',
+    },
+    
+    showEditBox: {
+      height: '100%',
+      opacity: 1,
+    }
   };
 });
 

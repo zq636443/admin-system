@@ -6,7 +6,7 @@ import proxy from './proxy';
 
 import routes from './routes';
 
-const { REACT_APP_ENV = 'dev' } = process.env;
+const { REACT_APP_ENV } = process.env;
 
 export default defineConfig({
   /**
@@ -15,6 +15,10 @@ export default defineConfig({
    * @doc https://umijs.org/docs/api/config#hash
    */
   hash: true,
+  define: {
+    REACT_APP_ENV: process.env.REACT_APP_ENV
+  },
+  
   /**
    * @name 兼容性设置
    * @description 设置 ie11 不一定完美兼容，需要检查自己使用的所有依赖

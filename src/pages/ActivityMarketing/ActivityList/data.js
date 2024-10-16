@@ -2,14 +2,14 @@
  * @Author: zq636443 zq636443@163.com
  * @Date: 2024-10-14 21:12:57
  * @LastEditors: zq636443 zq636443@163.com
- * @LastEditTime: 2024-10-14 21:17:38
+ * @LastEditTime: 2024-10-15 21:53:30
  * @FilePath: /admin-system/src/pages/ActivityMarketing/ActivityList/data.js
  */
 
-const all = require('./images/all.png');
-const start = require('./images/start.png');
-const end = require('./images/end.png');
-const activityStatusList = [
+const all = require('./assets/images/all.png');
+const start = require('./assets/images/start.png');
+const end = require('./assets/images/end.png');
+export const activityStatusList = [
   {
     key: 'ALL',
     name: '全部',
@@ -30,4 +30,14 @@ const activityStatusList = [
   },
 ];
 
-export default activityStatusList;
+export const gridConfig = {
+  gutter: 16,
+  xs: 1,
+  sm: 2,
+  md: 3,
+  lg: 3,
+  xl: 4,
+  xxl: 5,
+};
+
+

@@ -2,7 +2,7 @@
  * @Author: zq636443 zq636443@163.com
  * @Date: 2024-10-10 21:48:26
  * @LastEditors: zq636443 zq636443@163.com
- * @LastEditTime: 2024-10-15 15:07:58
+ * @LastEditTime: 2024-10-15 15:18:58
  * @FilePath: /admin-system/.eslintrc.js
  */
 module.exports = {
@@ -56,5 +56,7 @@ module.exports = {
     'comma-spacing': 'error',
     'import/extensions': 0,
     'no-console': 'warn',
+    'no-unused-vars': 'warn',
+    'no-undef': 'error'
   },
 };

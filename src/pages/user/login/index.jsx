@@ -20,7 +20,7 @@ import {
 import { FormattedMessage, Helmet, SelectLang, useIntl, useModel } from '@umijs/max';
 import { Alert, message, Tabs } from 'antd';
 import { createStyles } from 'antd-style';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { flushSync } from 'react-dom';
 import Settings from '../../../../config/defaultSettings';
 
@@ -101,6 +101,12 @@ const Login = () => {
   const { styles } = useStyles();
   const intl = useIntl();
 
+  useEffect(() => {
+    const token = localStorage.getItem('JINIU_DATA_PRODUCT_CMS_TOKEN');
+    if (token && location.pathname === '/user/login') {
+      history.replace('/');
+    }
+  }, []);
   const fetchUserInfo = async () => {
     const userInfo = await initialState?.fetchUserInfo?.();
     if (userInfo) {
@@ -123,21 +129,19 @@ const Login = () => {
           id: 'pages.login.success',
           defaultMessage: '登录成功！',
         });
+        localStorage.setItem('JINIU_DATA_PRODUCT_CMS_USERINFO', JSON.stringify(result));
         message.success(defaultLoginSuccessMessage);
         await fetchUserInfo();
         const urlParams = new URL(window.location.href).searchParams;
+        // history.replace(urlParams.get('redirect') || '/');
         window.location.href = urlParams.get('redirect') || '/';
         return;
       }
-      console.log(msg);
-      // 如果失败去设置用户错误信息
-      setUserLoginState(msg);
     } catch (error) {
       const defaultLoginFailureMessage = intl.formatMessage({
         id: 'pages.login.failure',
         defaultMessage: '登录失败，请重试！',
       });
-      console.log(error);
       message.error(defaultLoginFailureMessage);
     }
   };

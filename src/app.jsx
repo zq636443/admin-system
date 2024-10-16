@@ -1,10 +1,9 @@
 import { AvatarDropdown, AvatarName } from '@/components';
-import { LinkOutlined } from '@ant-design/icons';
-import { history, Link } from '@umijs/max';
+import { BellOutlined } from '@ant-design/icons';
+import { history } from '@umijs/max';
 import defaultSettings from '../config/defaultSettings';
 import { errorConfig } from './requestErrorConfig';
 import { getMenuList } from './services/users/index.js';
-const isDev = process.env.REACT_APP_ENV === 'dev';
 const loginPath = '/user/login';
 
 /**
@@ -24,11 +23,16 @@ export async function getInitialState() {
   const { location } = history;
   if (![loginPath, '/user/register', '/user/register-result'].includes(location.pathname)) {
     const currentUser = await fetchUserInfo();
+    const userInfo = JSON.parse(localStorage.getItem('JINIU_DATA_PRODUCT_CMS_USERINFO') || '{}');
+    const { profilePhoto, ...restUserInfo } = userInfo;
     return {
       fetchUserInfo,
       menu: currentUser.menuTrees,
       authorizationKeys: currentUser.codes,
-      currentUser: currentUser,
+      currentUser: {
+        ...restUserInfo,
+        avatar: profilePhoto,
+      },
       settings: defaultSettings,
     };
   }
@@ -57,9 +61,16 @@ const transformData = (data) => {
 };
 
 export const layout = ({ initialState, setInitialState }) => {
-  const { currentUser, menu } = initialState || {};
+  const { menu, settings } = initialState || {};
   return {
-    // actionsRender: () => [<Question key="doc" />, <SelectLang key="SelectLang" />],
+    actionsRender: () => [
+      // <Question key="doc" />,
+      // <SelectLang key="SelectLang" />,
+      <BellOutlined
+        key="message"
+        style={{ fontSize: '24px', color: settings?.colorPrimary, cursor: 'pointer' }}
+      />,
+    ],
     avatarProps: {
       src: initialState?.currentUser?.avatar,
       title: <AvatarName />,
@@ -79,15 +90,7 @@ export const layout = ({ initialState, setInitialState }) => {
         history.push(loginPath);
       }
     },
-    actionsRender: () => {},
     menuDataRender: () => transformData(menu),
-    // menuItemRender: (menuItemProps, defaultDom) => {
-    //   return (
-    //     <Link to={menuItemProps.path}>
-    //       <span>{menuItemProps.name}</span>
-    //     </Link>
-    //   );
-    // },
     collapsed: false,
     menu: {
       type: 'group',
@@ -112,19 +115,19 @@ export const layout = ({ initialState, setInitialState }) => {
         width: '331px',
       },
     ],
-    links: isDev
-      ? [
-          <Link key="openapi" to="/umi/plugin/openapi" target="_blank">
-            <LinkOutlined />
-            <span>OpenAPI 文档</span>
-          </Link>,
-        ]
-      : [],
+    // links: isDev
+    //   ? [
+    //       <Link key="openapi" to="/umi/plugin/openapi" target="_blank">
+    //         <LinkOutlined />
+    //         <span>OpenAPI 文档</span>
+    //       </Link>,
+    //     ]
+    //   : [],
     menuHeaderRender: undefined,
     // 自定义 403 页面
     // unAccessible: <div>unAccessible</div>,
     // 增加一个 loading 的状态
-    // childrenRender: ( children ) => {
+    // childrenRender: (children) => {
     //   // if (initialState?.loading) return <PageLoading />;
     //   return (
     //     <>
@@ -134,11 +137,11 @@ export const layout = ({ initialState, setInitialState }) => {
     //           disableUrlParams
     //           enableDarkTheme
     //           settings={initialState?.settings}
-    //           onSettingChange={( settings ) => {
-    //             setInitialState( ( preInitialState ) => ( {
+    //           onSettingChange={(settings) => {
+    //             setInitialState((preInitialState) => ({
     //               ...preInitialState,
     //               settings,
-    //             } ) );
+    //             }));
     //           }}
     //         />
     //       )}
@@ -155,7 +158,6 @@ export const layout = ({ initialState, setInitialState }) => {
  * @doc https://umijs.org/docs/max/request#配置
  */
 
-const { REACT_APP_ENV = 'dev' } = process.env;
 const apiObj = {
   dev: 'http://api.test.jiniutech.cn',
   pro: 'https://api-hd.jiniutech.com',

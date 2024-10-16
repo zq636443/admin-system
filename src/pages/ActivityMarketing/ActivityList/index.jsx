@@ -1,50 +1,16 @@
 import { PlusOutlined } from '@ant-design/icons';
 import { PageContainer, ProForm, ProFormText } from '@ant-design/pro-components';
 import { useRequest } from '@umijs/max';
-import { Button, Card, Divider, List, message, Radio } from 'antd';
+import { Button, Divider, List, message, Radio, Upload } from 'antd';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import activityStatusList from './data';
-import { fetchActiveStatistics, fetchActivityList } from './service';
+import CardItem from './CardItem';
+import { activityStatusList, gridConfig } from './data';
+import { fetchActiveStatistics, fetchActivityList, importActivity } from './service';
 import useStyles from './style.style';
 
 const RadioGroup = Radio.Group;
 const RadioButton = Radio.Button;
-
-const CardItem = ({ data }) => {
-  const { styles } = useStyles();
-  const imgBoxRef = useRef(null);
-  const imgRef = useRef(null);
-  const { coverPicture, id } = data || {};
-
-  const handleMouseEnter = () => {
-    const scrollSpeed = 120; // 调整滑动速度
-    if (!imgBoxRef?.current || !imgRef?.current) return;
-    const maxScroll = imgBoxRef?.current?.scrollHeight - imgBoxRef?.current?.clientHeight;
-    imgRef.current.style.transition = `all ${maxScroll / scrollSpeed}s linear`;
-    imgRef.current.style.transform = `translateY(${-maxScroll}px)`;
-  };
-
-  const handleMouseLeave = () => {
-    if (!imgRef?.current) return;
-    imgRef.current.style.transition = 'transform 2s ease';
-    imgRef.current.style.transform = `translateY(0px)`;
-  };
-
-  return (
-    <div
-      key={id}
-      className={styles.blockActivityCardImg}
-      ref={imgBoxRef}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
-      // onClick={( e ) => jumpDataCenter( e, item )}
-    >
-      <img alt="" src={coverPicture} ref={imgRef} />
-      {/* <img className={styles.blockActivityCardStatus} alt="" src={statusUrl} /> */}
-    </div>
-  );
-};
 
 const CardList = () => {
   const { styles } = useStyles();
@@ -55,6 +21,7 @@ const CardList = () => {
   const [pageNum, setPageNum] = useState(1);
   const [roles, setroles] = useState('');
   const [hasMore, setHasMore] = useState(true); // 控制是否还有更多数据
+  const [uploading, setUploading] = useState(false);
 
   const { loading, run: getActivityList } = useRequest(
     async () => {
@@ -112,12 +79,40 @@ const CardList = () => {
     setActivityStatesType(e);
   };
 
-  const handleSearch = async () => {
+  const handleSearch = async (value) => {
+    const { id, name } = value;
+    if (!id && !name) return;
     resetList();
+    getActivityList();
   };
   const handleReset = () => {
-    setPageNum(1);
+    resetList();
+    getActivityList();
   };
+
+  const beforeUpload = async (file) => {
+    if (!file) return;
+    const { lastModified, name } = file;
+    if (name.substring(name.length - 3) !== 'txt') {
+      message.error('文件格式类型不是txt');
+      return;
+    }
+    setUploading(true);
+    const formData = new FormData();
+    if (lastModified) {
+      formData.append('file', file); // 文件对象
+    } else {
+      formData.append('file', file, name);
+    }
+    const res = await importActivity({ file: formData });
+    if (res.success) {
+      resetList();
+      getActivityList();
+      message.success('导入活动成功，奖品需重新配置');
+    }
+    setUploading(false);
+  };
+
   const renderCollaborationTabs = () => {
     return (
       <RadioGroup onChange={handleColloborChange} defaultValue="">
@@ -138,7 +133,7 @@ const CardList = () => {
         >
           <img alt="" src={img} />
           <div>
-            <div className={styles.activityStatesNum}>{activeStatisticsData[val] || 0}</div>
+            <div className={styles.activityStatesNum}>{activeStatisticsData?.[val] || 0}</div>
             <div>{name}</div>
           </div>
         </div>
@@ -171,9 +166,24 @@ const CardList = () => {
               >
                 清空
               </Button>,
-              <Button key="import" type="primary" onClick={() => {}} style={{ marginLeft: 8 }}>
-                导入活动
-              </Button>,
+              <Upload
+                key="import"
+                fileList={[]}
+                beforeUpload={beforeUpload}
+                disabled={uploading}
+                accept=".txt"
+                style={{
+                  width: 'auto',
+                  height: 'auto',
+                  background: 'none',
+                  border: 'none',
+                  marginLeft: 8,
+                }}
+              >
+                <Button type="primary" loading={uploading}>
+                  导入活动
+                </Button>
+              </Upload>,
             ];
           },
         }}
@@ -186,7 +196,6 @@ const CardList = () => {
   const loadMoreData = () => {
     if (!loading && hasMore) {
       setPageNum((prev) => prev + 1);
-      message.success('加载更多数据');
     }
   };
 
@@ -225,33 +234,18 @@ const CardList = () => {
           hasMore={true}
           endMessage={<Divider plain>It is all, nothing more 🤐</Divider>}
           scrollableTarget="scrollableDiv"
-          style={{ overflowX: 'hidden' }}
+          style={{ overflow: 'hidden' }}
         >
           <List
             rowKey="id"
             loading={loading}
-            grid={{
-              gutter: 16,
-              xs: 1,
-              sm: 2,
-              md: 3,
-              lg: 3,
-              xl: 4,
-              xxl: 6,
-            }}
+            grid={gridConfig}
             dataSource={list}
             renderItem={(item) => {
               if (item && item.id) {
                 return (
                   <List.Item key={item.id}>
-                    <Card
-                      hoverable
-                      className={styles.card}
-                      style={{ width: 240, height: 340 }}
-                      cover={<CardItem data={item} />}
-                    >
-                      <Card.Meta title={<a>{item.name}</a>} />
-                    </Card>
+                    <CardItem data={item} />
                   </List.Item>
                 );
               }

@@ -34,3 +34,9 @@ module.exports = {
     'prettier-plugin-two-style-order',
   ],
 };
+
+// const fabric = require('@umijs/fabric');
+
+// module.exports = {
+//   ...fabric.prettier,
+// };
