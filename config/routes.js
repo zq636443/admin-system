@@ -2,7 +2,7 @@
  * @Author: zq636443 zq636443@163.com
  * @Date: 2024-10-10 21:48:26
  * @LastEditors: zq636443 zq636443@163.com
- * @LastEditTime: 2024-10-16 10:30:59
+ * @LastEditTime: 2024-10-16 20:15:03
  * @FilePath: /admin-system/config/routes.js
  */
 /**
@@ -53,11 +53,6 @@ export default [
       // },
     ],
   },
-  {
-    path: '/home',
-    name: 'home',
-    component: './home/index'
-  },
   ...activityMenu,
   ...teamMenu,
   {
@@ -81,7 +76,7 @@ export default [
   },
   {
     path: '/',
-    redirect: '/home',
+    redirect: '/activityTemplate/bees',
   },
   {
     component: '404',

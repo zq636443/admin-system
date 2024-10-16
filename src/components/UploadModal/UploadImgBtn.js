@@ -4,8 +4,7 @@ import { PlusCircleTwoTone, MinusCircleTwoTone, UpCircleTwoTone, DownCircleTwoTo
 import Cropper from 'react-cropper';
 import UploadFileRequest from './UploadFileRequest';
 import 'cropperjs/dist/cropper.css';
-// import './uploadImg.less';
-import styles from './uploadModal.less'
+import './uploadImg.less';
 /*  eslint-disable  react/no-string-refs,  no-param-reassign,  no-cond-assign, no-nested-ternary */
 //  无扩展情况 传入 previewImage 图片链接 和  onChange函数回调链接
 
